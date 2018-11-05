@@ -44,7 +44,7 @@ def return_hello():
 
 @app.task
 def do_some_work():
-    time_to_work = 1 * random.choice([5, 10, 15])
+    time_to_work = random.choice([5, 10, 15])
     print('SPECIAL PRINT FROM "do_some_work" TASK:', 'I wanna sleep %ssec.' % time_to_work)
     time.sleep(time_to_work)
     return time_to_work
