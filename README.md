@@ -65,6 +65,8 @@ celery flower -A app --address=127.0.0.1 --port=5555
 [W 181105 13:33:34 control:44] 'conf' inspect method failed
 ```
 
+в браузере:
+
 ![flower_empty.png](README.files/img/screenshots/flower_empty.png)
 
 
