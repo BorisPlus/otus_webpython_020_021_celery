@@ -5,6 +5,9 @@
 ## Предварительно
 
 Возможно вам понадобится `su` или `sudo`:
+```bash
+apt-get install rabbitmq-server
+```
 
 ```bash 
 # for using Redis as a message transport or as a result backend.
@@ -69,4 +72,21 @@ celery flower -A app --address=127.0.0.1 --port=5555
 
 ![flower_empty.png](README.files/img/screenshots/flower_empty.png)
 
+## Демонстрация
 
+```bash
+cd ./rookery 
+```
+
+* в первом терминале
+
+```bash
+celery -l info --config=celeryconfig --loglevel=info worker -A app -n node_one
+```
+
+* во втором терминале
+```bash
+python3 jobs.py 
+```
+
+Лицезрейте лог первого терминала и второго.
