@@ -28,8 +28,8 @@ class Request(models.Model):
         ordering = ('-datetime',)
 
     datetime = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    content = models.TextField(blank=False, null=False, verbose_name='Содержание запроса', )
-    comment = models.TextField(blank=True, null=True, max_length=200, verbose_name='Комментарий', )
+    content = models.TextField(blank=False, null=False, verbose_name='Содержание', )
+    comment = models.CharField(blank=True, null=True, max_length=50, verbose_name='Комментарий', )
 
     def __str__(self):
         return 'ID{x}: {y}'.format(x=self.id, y=self.datetime.strftime(default_date_format))
@@ -55,15 +55,13 @@ class Request(models.Model):
         if None in sub_requests_contents:
             sub_requests_contents.remove(None)
         for content in sub_requests_contents:
-            SubRequest.save_for_run(self.pk, content)
+            SubRequest.save_for_check(self, content)
 
 
 # @app.task
 @app.task(name='save_sub_requests_task')
 def save_sub_requests_task(pk):
-    print('YO save_sub_requests', pk)
     request = Request.objects.get(pk=pk)
-    print('YO save_sub_requests', request)
     request.save_sub_requests()
 
 
@@ -109,25 +107,20 @@ class SubRequest(models.Model):
     checker = None
 
     @staticmethod
-    @app.task(name='subrequest.save_for_run')
-    def save_for_run(pk, content):
+    def save_for_check(request, content):
         obj = SubRequest()
-        obj.request = Request.objects.get(pk=pk)
+        obj.request = request
         obj.content = content
         obj.status = SubRequestStatuses.CREATED
         checker = random.choice(list(checkers_queue.keys()))
         obj.checker_name = '%s.%s' % (checker.__module__, checker.__name__)
-        # obj.checker = checker
         obj.save()
-        sub_request_run(checker, obj)
+        obj.check_me_by(checker)
 
-
-@app.task(name='subrequest.run')
-def sub_request_run(checker, obj):
-    obj.status = SubRequestStatuses.PROCESSING
-    # result = ('00:00:01', '')
-    result = checker(obj.content)
-    obj.stopwatch = result[0]
-    obj.result = result[1]
-    obj.status = SubRequestStatuses.READY
-    obj.save()
+    def check_me_by(self, checker):
+        self.status = SubRequestStatuses.PROCESSING
+        result = checker(self.content)
+        self.stopwatch = result[0]
+        self.result = result[1]
+        self.status = SubRequestStatuses.READY
+        self.save()

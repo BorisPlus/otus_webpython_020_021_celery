@@ -21,21 +21,11 @@ class Command(BaseCommand):
             ('processing', 'исполняется'),
             ('ready', 'готов')
         )
-        sub_request_types = (
-            ('ping', 'PING'),
-            ('port', 'Открытый порт'),
-            ('http', 'HTTP статус'),
-        )
         try:
             for sub_request_status in sub_request_statuses:
                 models.SubRequestStatus.objects.get_or_create(
                     code=sub_request_status[0],
                     name=sub_request_status[1]
-                )
-            for sub_request_type in sub_request_types:
-                models.SubRequestType.objects.get_or_create(
-                    code=sub_request_type[0],
-                    name=sub_request_type[1]
                 )
             self.stdout.write(self.style.SUCCESS('Successfully init'))
         except:
