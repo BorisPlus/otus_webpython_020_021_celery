@@ -36,8 +36,9 @@ class Request(models.Model):
 
     def save(self, *args, **kwargs):
         super(Request, self).save(*args, **kwargs)
-        # Запрос разбивается на подзапросы, те сохраняются и исполняются
-        # это присходит асинхронно
+        # Проверочный запрос разбивается на подзапросы (то есть список доменов или ip на отдельные),
+        # те сохраняются и исполняются
+        # и это присходит в ИНОМ потоке от потока исполнения веба
         save_sub_requests_task.delay(self.pk)
 
     def save_sub_requests(self):
