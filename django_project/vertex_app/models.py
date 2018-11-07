@@ -36,6 +36,8 @@ class Request(models.Model):
 
     def save(self, *args, **kwargs):
         super(Request, self).save(*args, **kwargs)
+        # Запрос разбивается на подзапросы, те сохраняются и исполняются
+        # это присходит асинхронно
         save_sub_requests_task.delay(self.pk)
 
     def save_sub_requests(self):
