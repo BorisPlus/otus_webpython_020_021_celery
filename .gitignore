@@ -1,6 +1,7 @@
 # My gitignore
 gitignore/
 NO.**
+db.sqlite3
 
 # PyCharm
 .idea/
