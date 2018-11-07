@@ -106,8 +106,6 @@ class RequestAdmin(NoDeleteMixin, NoEditMixin, admin.ModelAdmin):
         return '/vertex_app/subrequest/?request__id__exact=%s' % obj.pk
 
 
-
-
 admin.site.register(models.Request, RequestAdmin)
 
 
