@@ -2,91 +2,27 @@
 
 Идея и описание [Rookery](https://github.com/BorisPlus/otus_webpython_020_021)
 
-## Предварительно
+Проверочный запрос (то есть список доменов или ip) разбивается на подзапросы, те сохраняются и исполняются. И это присходит в ИНОМ потоке, не в потоке исполнения Django.
 
-Возможно вам понадобится `su` или `sudo`:
-```bash
-apt-get install rabbitmq-server
-```
 
-```bash 
-# for using Redis as a message transport or as a result backend.
-pip3 install -U "celery[redis]" 	
-```
+## Демонстрация с GUI
 
-или
+См. GIF-анимацию:
+<kbd>![flower_empty.png](README.files/img/screencasts/rookery.gif)</kbd>
 
-```bash
-pip3 install -r requirements.txt 
-```
 
-## Используем Flower
+## Основной коммент
 
-```bash 
-pip3 install flower
-```
+Не до "чистоты" репозитория и прикручивания AJAX мне сейчас. Прошу понять и простить :)
 
-Запустите
+## Авторы
 
-```bash
-cd ./rookery
-flower -A app --port=5555
-```
+* **BorisPlus** - [https://github.com/BorisPlus/otus_webpython_020_021_celery](https://github.com/BorisPlus/otus_webpython_020_021_celery)
 
-или
+## Лицензия
 
-```bash
-cd ./rookery
-celery flower -A app --address=127.0.0.1 --port=5555
+Свободно
 
-```
+## Дополнительные сведения
 
-в терминале:
-
-```text
-[I 181105 13:29:02 command:139] Visit me at http://localhost:5555
-[I 181105 13:29:02 command:144] Broker: amqp://guest:**@localhost:5672//
-[I 181105 13:29:02 command:147] Registered tasks: 
-    ['app.hello',
-     'celery.accumulate',
-     'celery.backend_cleanup',
-     'celery.chain',
-     'celery.chord',
-     'celery.chord_unlock',
-     'celery.chunks',
-     'celery.group',
-     'celery.map',
-     'celery.starmap']
-[I 181105 13:33:31 mixins:224] Connected to redis://localhost:6379/0
-[W 181105 13:33:34 control:44] 'stats' inspect method failed
-[W 181105 13:33:34 control:44] 'active_queues' inspect method failed
-[W 181105 13:33:34 control:44] 'registered' inspect method failed
-[W 181105 13:33:34 control:44] 'scheduled' inspect method failed
-[W 181105 13:33:34 control:44] 'active' inspect method failed
-[W 181105 13:33:34 control:44] 'reserved' inspect method failed
-[W 181105 13:33:34 control:44] 'revoked' inspect method failed
-[W 181105 13:33:34 control:44] 'conf' inspect method failed
-```
-
-в браузере:
-
-![flower_empty.png](README.files/img/screenshots/flower_empty.png)
-
-## Демонстрация
-
-```bash
-cd ./rookery 
-```
-
-* в первом терминале
-
-```bash
-celery -l info --config=celeryconfig --loglevel=info worker -A app -n node_one
-```
-
-* во втором терминале
-```bash
-python3 jobs.py 
-```
-
-Лицезрейте лог первого терминала и второго.
+Проект в рамках домашнего задания курса "Web-разработчик на Python" на https://otus.ru/learning
